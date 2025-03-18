@@ -1,84 +1,84 @@
-// Define motor driver pins
-const int motorPin1 = 2;  // IN1 (Motor 1 - Left)
-const int motorPin2 = 3;  // IN2 (Motor 1 - Left)
-const int motorPin3 = 4;  // IN3 (Motor 2 - Right)
-const int motorPin4 = 5;  // IN4 (Motor 2 - Right)
-
-// Define pins for ultrasonic sensor
-const int trigPin = 6;
-const int echoPin = 7;
-
-void setup() {
-  // Set motor driver pins as OUTPUT
-  pinMode(motorPin1, OUTPUT);
-  pinMode(motorPin2, OUTPUT);
-  pinMode(motorPin3, OUTPUT);
-  pinMode(motorPin4, OUTPUT);
-
-  // Set ultrasonic sensor pins
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
+void setup(){
   
-  Serial.begin(9600);  // Initialize serial communication
-}
+  pinMode(13,OUTPUT);   // top red
+  pinMode(12,OUTPUT);   // top yellow
+  pinMode(11,OUTPUT);   // top green
 
-void loop() {
-  long distance = getDistance();
+  pinMode(10,OUTPUT);   // left red
+  pinMode(9,OUTPUT);    // left yellow
+  pinMode(8,OUTPUT);    // left green
+
+  pinMode(5,OUTPUT);   // bottom red
+  pinMode(6,OUTPUT);   // bottom yellow
+  pinMode(7,OUTPUT);   // bottom green
+
+  pinMode(2,OUTPUT);   // right red
+  pinMode(3,OUTPUT);   // right yellow
+  pinMode(4,OUTPUT);   // right green
   
-  if (distance < 20) {  // If obstacle detected within 20 cm
-    stopMotors();
-    delay(1000);
-    moveBackward();
-    delay(1000);
-    turnRight();  // or left, depending on how you want to avoid the obstacle
-  } else {
-    moveForward();
-  }
-  
-  delay(100);
 }
+void loop(){
 
-// Function to get distance from ultrasonic sensor
-long getDistance() {
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  
-  long duration = pulseIn(echoPin, HIGH);
-  long distance = (duration / 2) * 0.0344;  // Calculate distance in cm
-  return distance;
-}
+  digitalWrite(11, HIGH);  // Top green on
+  digitalWrite(10, HIGH);  // Left red on
+  digitalWrite(5, HIGH);   // Bottom red on
+  digitalWrite(2, HIGH);   // Right red on
+  delay(2000);             // Wait for 2 seconds
 
-// Function to move the robot forward
-void moveForward() {
-  digitalWrite(motorPin1, HIGH);  // Left motor forward
-  digitalWrite(motorPin2, LOW);   
-  digitalWrite(motorPin3, HIGH);  // Right motor forward
-  digitalWrite(motorPin4, LOW);   
-}
+  // Step 2: 1 second left for top green, turn on right yellow
+  digitalWrite(3, HIGH);   // Right yellow on
+  delay(1000);             // Wait for 1 second
+  digitalWrite(11, LOW);   // Top green off
+  digitalWrite(3, LOW);    // Right yellow off
 
-// Function to stop the motors
-void stopMotors() {
-  digitalWrite(motorPin1, LOW);
-  digitalWrite(motorPin2, LOW);
-  digitalWrite(motorPin3, LOW);
-  digitalWrite(motorPin4, LOW);
-}
+  // Step 3: Turn on top red and right green for 3 seconds
+  digitalWrite(13, HIGH);  // Top red on
+  digitalWrite(4, HIGH);   // Right green on
+  delay(2000);             // Wait for 2 seconds
 
-// Function to move the robot backward
-void moveBackward() {
-  digitalWrite(motorPin1, LOW);   // Left motor backward
-  digitalWrite(motorPin2, HIGH);  
-  digitalWrite(motorPin3, LOW);   // Right motor backward
-  digitalWrite(motorPin4, HIGH);  
-}
+  // Step 4: 1 second left for right green, turn on bottom yellow
+  digitalWrite(6, HIGH);   // Bottom yellow on
+  delay(1000);             // Wait for 1 second
+  digitalWrite(4, LOW);    // Right green off
+  digitalWrite(6, LOW);    // Bottom yellow off
 
-// Function to turn the robot right
-void turnRight() {
-  digitalWrite(motorPin1, HIGH);  // Left motor forward
-  digitalWrite(motorPin2, LOW);   
-  digitalWrite(motorPin3, LOW);   // Right motor backward
-  digitalWrite(motorPin4, HIGH);  
+  // Step 5: Turn on right red and bottom green for 3 seconds
+  digitalWrite(2, HIGH);   // Right red on
+  digitalWrite(7, HIGH);   // Bottom green on
+  delay(2000);             // Wait for 2 seconds
+
+  // Step 6: 1 second left for bottom green, turn on left yellow
+  digitalWrite(9, HIGH);   // Left yellow on
+  delay(1000);             // Wait for 1 second
+  digitalWrite(7, LOW);    // Bottom green off
+  digitalWrite(9, LOW);    // Left yellow off
+
+  // Step 7: Turn on bottom red and left green for 3 seconds
+  digitalWrite(5, HIGH);   // Bottom red on
+  digitalWrite(8, HIGH);   // Left green on
+  delay(2000);             // Wait for 2 seconds
+
+  // Step 8: 1 second left for left green, turn on top yellow
+  digitalWrite(12, HIGH);  // Top yellow on
+  delay(1000);             // Wait for 1 second
+  digitalWrite(8, LOW);    // Left green off
+  digitalWrite(12, LOW);   // Top yellow off
+
+  // Step 9: Turn on left red and top green for 3 seconds
+  digitalWrite(10, HIGH);  // Left red on
+  digitalWrite(11, HIGH);  // Top green on
+  delay(2000);             // Wait for 2 seconds
+
+  // Step 10: 1 second left for top green, turn on right yellow
+  digitalWrite(3, HIGH);   // Right yellow on
+  delay(1000);             // Wait for 1 second
+  digitalWrite(11, LOW);   // Top green off
+  digitalWrite(3, LOW);    // Right yellow off
+
+  // Reset all LEDs to off before repeating the cycle
+  digitalWrite(13, LOW);   // Top red off
+  digitalWrite(10, LOW);   // Left red off
+  digitalWrite(5, LOW);    // Bottom red off
+  digitalWrite(2, LOW);    // Right red off
+
 }
